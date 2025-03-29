@@ -16,6 +16,7 @@ app.get('/api/createchannel', async (req,res)=>{
     //todo-implement this
     // channelmetrics = remote.allocatechannel();
     // console.log(channelmetrics)
+    console.log(req.query);
     await exec("python least_candidate_from_csv.py", (error, stdout, stderr) => {
         if (error) {
             return res.status(500).json({ error: error.message });
