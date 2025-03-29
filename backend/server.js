@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const remote = require('./allocate.js');
-const { channel } = require('diagnostics_channel');
 const cors = require('cors');
 const { exec } = require("child_process");
 
