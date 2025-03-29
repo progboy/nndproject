@@ -23,6 +23,7 @@ create.onclick = () => {
 
 delButton.onclick = () => {
     //wip, implement this
+    fetch(`api/closechannel?aval=${aval}&bval=${bval}`);
 }
 
 window.addEventListener('beforeunload', function (e) {
