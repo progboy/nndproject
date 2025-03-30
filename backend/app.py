@@ -331,4 +331,5 @@ def clear_json():
     
 
 if __name__ == '__main__':
+    clear_json()
     socketio.run(app, debug=True)
