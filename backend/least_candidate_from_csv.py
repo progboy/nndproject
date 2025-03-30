@@ -1,6 +1,6 @@
-# least_candidate_from_csv.py
-
 import pandas as pd
+import json
+import os
 
 def load_results_from_csv(filename="results.csv"):
     """
@@ -46,16 +46,47 @@ def get_least_S_for_Q_excluding_CCh_from_csv(Q, CCh, filename="results.csv"):
     S = best_row["S"]
     return gi, S
 
+def load_exclusion_list(filename="exclusion_list.json"):
+    """
+    Load the exclusion list from a JSON file.
+    If the file does not exist or is empty/invalid, return an empty list.
+    """
+    if os.path.exists(filename):
+        with open(filename, "r") as file:
+            content = file.read().strip()
+            if content:
+                try:
+                    return json.loads(content)
+                except json.JSONDecodeError:
+                    # Return an empty list if JSON is malformed.
+                    return []
+    return []
+
+
+def save_exclusion_list(CCh, filename="exclusion_list.json"):
+    """
+    Save the exclusion list to a JSON file.
+    """
+    with open(filename, "w") as file:
+        json.dump(CCh, file)
+
 # Optional: Test the function if this file is run as a script.
 if __name__ == "__main__":
-    # Example Q configuration and exclusion list.
-    Q_demo = (1530, 1537,1538)
-    CCh_demo = [1531,1532,1533, 1537,1557,1558,1560,1561,1562,1563,1564,1565]
+    # Example Q configuration.
+    Q_demo = (1530, 1537, 1538)
+    
+    # Load exclusion list from file; if file not found, use a default list.
+    CCh_demo = load_exclusion_list()
+    if not CCh_demo:
+        CCh_demo = [1531, 1532, 1533,1534,1535,1536, 1557, 1558, 1560, 1561, 1562, 1563, 1564, 1565]
     
     result = get_least_S_for_Q_excluding_CCh_from_csv(Q_demo, CCh_demo)
     if result:
         gi, S = result
-        #print(f"For Q = {Q_demo} excluding {CCh_demo}, the candidate with the smallest S is gi = {gi} with S = {S}")
-        print(f"candidate with smallest S is gi={gi} with S={S}")
+        print(f"Candidate with smallest S is gi={gi} with S={S}")
+        # Convert gi to a Python int before appending.
+        CCh_demo.append(int(gi))
+        # Save the updated exclusion list back to file.
+        save_exclusion_list(CCh_demo)
     else:
         print(f"No candidate found for Q = {Q_demo} excluding {CCh_demo}")
